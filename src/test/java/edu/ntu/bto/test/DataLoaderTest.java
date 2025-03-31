@@ -37,5 +37,7 @@ public class DataLoaderTest {
         List<Project> projects = DataLoader.loadProjects("ProjectList.xlsx");
         assertNotNull(projects, "Projects list should not be null");
         assertFalse(projects.isEmpty(), "Projects list should not be empty");
+        Project proj = projects.get(0);
+        assertTrue(proj.toString().contains("Project:"), "Project toString() should contain project name");
     }
 }
