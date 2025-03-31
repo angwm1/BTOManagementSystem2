@@ -16,10 +16,9 @@ public class BTOManagementSystemTest {
         system = new BTOManagementSystem();
     }
     
-    // Authentication & User Management
     @Test
     public void testValidUserLogin() {
-        // Adjust "S1234567A" to a valid NRIC in your ApplicantList.xlsx
+        // Ensure "S1234567A" exists in your ApplicantList.xlsx.
         User user = system.login("S1234567A", "password");
         assertNotNull(user, "Valid login should return a user");
         assertTrue(user instanceof Applicant, "User should be an Applicant");

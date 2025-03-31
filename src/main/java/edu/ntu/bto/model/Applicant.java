@@ -7,8 +7,6 @@ import edu.ntu.bto.service.BTOManagementSystem;
 
 /**
  * Represents an Applicant.
- * Applicants can view projects, apply for one project, view application status,
- * request withdrawal, and manage enquiries.
  */
 public class Applicant extends User {
     private Project appliedProject;
@@ -63,20 +61,27 @@ public class Applicant extends User {
             String option = scanner.nextLine();
             switch (option) {
                 case "1":
-                    system.getProjects().forEach(System.out::println);
+                    // Show only projects that are visible and match applicant’s criteria.
+                    system.getProjects().stream()
+                        .filter(p -> p.isVisible() && isEligibleForProject(p))
+                        .forEach(System.out::println);
                     break;
                 case "2":
                     System.out.print("Enter project name to apply for: ");
                     String projName = scanner.nextLine();
                     Project proj = system.getProjects().stream()
-                            .filter(p -> p.toString().contains(projName))
+                            .filter(p -> p.toString().contains(projName) && p.isVisible())
                             .findFirst().orElse(null);
-                    if (proj != null) {
+                    if (proj == null) {
+                        System.out.println("Project not found or not visible.");
+                    } else if (appliedProject != null) {
+                        System.out.println("You have already applied for a project.");
+                    } else if (!isEligibleForProject(proj)) {
+                        System.out.println("You are not eligible for this project.");
+                    } else {
                         setAppliedProject(proj);
                         setApplicationStatus("Pending");
                         System.out.println("Application submitted. Status: Pending.");
-                    } else {
-                        System.out.println("Project not found.");
                     }
                     break;
                 case "3":
@@ -89,7 +94,7 @@ public class Applicant extends User {
                     break;
                 case "4":
                     if (appliedProject != null) {
-                        this.applicationStatus = "Withdrawn";
+                        setApplicationStatus("Withdrawn");
                         System.out.println("Withdrawal requested.");
                     } else {
                         System.out.println("No application to withdraw.");
@@ -111,6 +116,21 @@ public class Applicant extends User {
                     System.out.println("Invalid option.");
             }
         }
+    }
+    
+    // Check eligibility based on marital status and age.
+    private boolean isEligibleForProject(Project p) {
+        // For simplicity, assume:
+        // Single applicants must be 35+ and can only apply for projects with flat type "2-Room".
+        // Married applicants must be 21+.
+        if (maritalStatus.equalsIgnoreCase("Single")) {
+            if (age < 35) return false;
+            // Check that project flat type available is "2-Room"
+            return p.getType1().equalsIgnoreCase("2-Room") || p.getType2().equalsIgnoreCase("2-Room");
+        } else if (maritalStatus.equalsIgnoreCase("Married")) {
+            return age >= 21;
+        }
+        return false;
     }
     
     private void manageEnquiries(Scanner scanner) {

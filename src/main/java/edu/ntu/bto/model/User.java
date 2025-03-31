@@ -47,7 +47,7 @@ public abstract class User {
     }
     
     /**
-     * Displays the CLI menu for the user.
+     * Display the CLI menu for the user.
      */
     public abstract void displayMenu(Scanner scanner, BTOManagementSystem system);
 }

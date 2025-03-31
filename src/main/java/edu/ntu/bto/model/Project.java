@@ -35,7 +35,59 @@ public class Project {
         this.manager = manager;
         this.officerSlot = officerSlot;
         this.officer = officer;
-        this.visible = true; // default visible
+        this.visible = true; // default
+    }
+    
+    public String getProjectName() {
+        return projectName;
+    }
+    
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+    
+    public String getType1() {
+        return type1;
+    }
+    
+    public int getUnitsType1() {
+        return unitsType1;
+    }
+    
+    public double getPriceType1() {
+        return priceType1;
+    }
+    
+    public String getType2() {
+        return type2;
+    }
+    
+    public int getUnitsType2() {
+        return unitsType2;
+    }
+    
+    public double getPriceType2() {
+        return priceType2;
+    }
+    
+    public String getOpenDate() {
+        return openDate;
+    }
+    
+    public String getCloseDate() {
+        return closeDate;
+    }
+    
+    public String getManager() {
+        return manager;
+    }
+    
+    public int getOfficerSlot() {
+        return officerSlot;
+    }
+    
+    public String getOfficer() {
+        return officer;
     }
     
     public boolean isVisible() {
@@ -44,6 +96,22 @@ public class Project {
     
     public void toggleVisibility() {
         visible = !visible;
+    }
+    
+    // Simulate flat booking: deduct one unit if available
+    public boolean bookFlat(String flatType) {
+        if (flatType.equalsIgnoreCase(type1)) {
+            if (unitsType1 > 0) {
+                unitsType1--;
+                return true;
+            }
+        } else if (flatType.equalsIgnoreCase(type2)) {
+            if (unitsType2 > 0) {
+                unitsType2--;
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override
