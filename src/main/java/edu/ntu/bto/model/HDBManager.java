@@ -116,7 +116,7 @@ public class HDBManager extends User {
         int officerSlot = Integer.parseInt(scanner.nextLine());
         Project project = new Project(name, neighborhood, type1, unitsType1, priceType1,
                                       type2, unitsType2, priceType2, openDate, closeDate,
-                                      this.nric, officerSlot, "");
+                                      this.name, officerSlot, "");
         system.addProject(project);
         addMyProject(project);
         System.out.println("Project created successfully.");
