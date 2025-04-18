@@ -111,14 +111,16 @@ public class DataLoader {
             boolean firstRow = true;
             for (Row row : sheet) {
                 if (firstRow) { firstRow = false; continue; }
+                Cell nameCell = row.getCell(0, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                 Cell nricCell = row.getCell(1, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                 Cell ageCell = row.getCell(2, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                 Cell maritalCell = row.getCell(3, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                 if (nricCell != null && ageCell != null && maritalCell != null) {
+                	String name = getStringValue(nameCell);
                     String nric = getStringValue(nricCell);
                     int age = getIntCellValue(ageCell);
                     String maritalStatus = getStringValue(maritalCell);
-                    managers.add(new HDBManager(nric, age, maritalStatus));
+                    managers.add(new HDBManager(name, nric, age, maritalStatus));
                 }
             }
         } catch (IOException e) {

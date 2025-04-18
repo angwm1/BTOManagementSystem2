@@ -10,7 +10,7 @@ public class HDBManagerTest {
 
     @Test
     public void testCreateAndDeleteProject() {
-        HDBManager manager = new HDBManager("T4567890D", 50, "Married");
+        HDBManager manager = new HDBManager("Joy", "T4567890D", 50, "Married");
         BTOManagementSystem system = new BTOManagementSystem();
         
         Project newProj = new Project("New Horizon", "Boon Lay", "2-Room", 20, 320000,

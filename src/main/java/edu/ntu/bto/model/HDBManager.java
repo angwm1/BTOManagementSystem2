@@ -13,15 +13,21 @@ import edu.ntu.bto.service.BTOManagementSystem;
 public class HDBManager extends User {
     // List of projects created by this manager.
     private List<Project> myProjects;
-    
-    public HDBManager(String nric, int age, String maritalStatus) {
+	protected String name;
+	
+    public HDBManager(String name, String nric, int age, String maritalStatus) {
         super(nric, age, maritalStatus);
+        this.name = name;
         myProjects = new ArrayList<>();
     }
     
     public HDBManager(String nric, int age, String maritalStatus, String password) {
         super(nric, age, maritalStatus, password);
         myProjects = new ArrayList<>();
+    }
+    
+    public String getName() {
+        return name;
     }
     
     public List<Project> getMyProjects() {
