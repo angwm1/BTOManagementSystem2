@@ -20,8 +20,25 @@ public class Project {
 	private boolean visible;
 
 	public Project(String projectName, String neighborhood, String type1, int unitsType1, double priceType1,
-			String type2, int unitsType2, double priceType2, String openDate, String closeDate, String manager,
-			int officerSlot, String officer) {
+			String type2, int unitsType2, double priceType2, String openDate, String closeDate, String manager) {
+		this.projectName = projectName;
+		this.neighborhood = neighborhood;
+		this.type1 = type1;
+		this.unitsType1 = unitsType1;
+		this.priceType1 = priceType1;
+		this.type2 = type2;
+		this.unitsType2 = unitsType2;
+		this.priceType2 = priceType2;
+		this.openDate = openDate;
+		this.closeDate = closeDate;
+		this.manager = manager;
+		this.officerSlot = 10; // assume 10
+		this.officer = "";
+		this.visible = true; // default
+	}
+
+	public Project(String projectName, String neighborhood, String type1, int unitsType1, double priceType1,
+			String type2, int unitsType2, double priceType2, String openDate, String closeDate, String manager, int officerSlot, String officer) {
 		this.projectName = projectName;
 		this.neighborhood = neighborhood;
 		this.type1 = type1;
@@ -98,20 +115,16 @@ public class Project {
 		visible = !visible;
 	}
 
-	// Simulate flat booking: deduct one unit if available
-	public boolean bookFlat(String flatType) {
-		if (flatType.equalsIgnoreCase(type1)) {
-			if (unitsType1 > 0) {
-				unitsType1--;
-				return true;
-			}
-		} else if (flatType.equalsIgnoreCase(type2)) {
-			if (unitsType2 > 0) {
-				unitsType2--;
-				return true;
-			}
-		}
-		return false;
+	public void decrementOfficerSlot() { 
+		officerSlot--; 
+	}
+
+	public void decrementUnitsType1() { 
+		unitsType1--; 
+	}
+
+	public void decrementUnitsType2() { 
+		unitsType2--; 
 	}
 
 	@Override
