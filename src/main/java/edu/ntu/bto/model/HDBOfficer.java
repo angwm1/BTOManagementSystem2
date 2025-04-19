@@ -1,6 +1,8 @@
 package edu.ntu.bto.model;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 import edu.ntu.bto.service.BTOManagementSystem;
 
 /**
@@ -8,123 +10,154 @@ import edu.ntu.bto.service.BTOManagementSystem;
  * HDB Officers have all the capabilities of Applicants plus additional officer-specific operations.
  */
 public class HDBOfficer extends Applicant {
-    private String registrationStatus; // "Pending", "Approved", "Rejected"
-    private Project handledProject; // The project for which the officer is registered
+    private List<Registration> Registrations = new ArrayList<>();
     
     public HDBOfficer(String nric, int age, String maritalStatus) {
         super(nric, age, maritalStatus);
-        registrationStatus = "";
     }
     
     public HDBOfficer(String nric, int age, String maritalStatus, String password) {
         super(nric, age, maritalStatus, password);
-        registrationStatus = "";
     }
     
-    public String getRegistrationStatus() {
-        return registrationStatus;
-    }
-    
-    public void setRegistrationStatus(String status) {
-        this.registrationStatus = status;
-    }
-    
-    public Project getHandledProject() {
-        return handledProject;
-    }
-    
-    public void setHandledProject(Project project) {
-        this.handledProject = project;
+    public List<Registration> getRegistrations() {
+        return Registrations;
     }
     
     @Override
     public void displayMenu(Scanner scanner, BTOManagementSystem system) {
         boolean logout = false;
         while (!logout) {
-            System.out.println("\n--- HDB Officer Menu ---");
+            System.out.println("\n=== Officer Menu ===");
             System.out.println("1. View Projects");
-            System.out.println("2. Apply for a Project");
-            System.out.println("3. Register as Officer");
-            System.out.println("4. Book Flat");
-            System.out.println("5. Generate Receipt");
-            System.out.println("6. Change Password");
-            System.out.println("7. Logout");
-            System.out.print("Select an option: ");
-            String opt = scanner.nextLine();
-            switch (opt) {
-                case "1":
-                    system.getProjects().forEach(System.out::println);
+            System.out.println("2. Apply for Project");
+            System.out.println("3. View Application Status");
+            System.out.println("4. Withdraw Application");
+            System.out.println("5. Submit Enquiry");
+            System.out.println("6. View Submitted Enquiries");
+            System.out.println("7. Edit Submitted Enquiry");
+            System.out.println("8. Delete Submitted Enquiry");
+            System.out.println("9. Register for Project as Officer");
+            System.out.println("10. View Registration Status");
+            System.out.println("11. View Handled Project Details");
+            System.out.println("12. View Handled Project Enquiries");
+            System.out.println("13. Reply to Project Enquiries");
+            System.out.println("14. Book Flat for Applicant");
+            System.out.println("15. Generate Receipt");
+            System.out.println("16. Change Password");
+            System.out.println("17. Logout");
+            System.out.print("Select option: ");
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            switch (choice) {
+                case 1: 
+                    system.getProjectControl().getVisibleProjectsForApplicant(this).forEach(p ->
+                    System.out.println(p.getProjectName() + " - " + p.getNeighborhood()));
                     break;
-                case "2":
-                    System.out.print("Enter project name to apply for: ");
-                    String projName = scanner.nextLine();
-                    Project proj = system.getProjects().stream()
-                            .filter(p -> p.toString().contains(projName) && p.isVisible())
-                            .findFirst().orElse(null);
-                    if (proj == null) {
-                        System.out.println("Project not found or not visible.");
-                    } else if (getAppliedProject() != null) {
-                        System.out.println("You have already applied for a project.");
-                    } else {
-                        setAppliedProject(proj);
-                        setApplicationStatus("Pending");
-                        System.out.println("Application submitted. Status: Pending.");
-                    }
-                    break;
-                case "3":
-                    System.out.print("Enter project name to register as officer: ");
-                    String regProjName = scanner.nextLine();
-                    Project regProj = system.getProjects().stream()
-                            .filter(p -> p.toString().contains(regProjName))
-                            .findFirst().orElse(null);
-                    if (regProj == null) {
-                        System.out.println("Project not found.");
-                    } else if (getAppliedProject() != null) {
-                        System.out.println("You cannot register as officer if you've applied as applicant.");
-                    } else {
-                        setRegistrationStatus("Pending");
-                        System.out.println("Officer registration submitted. Status: Pending.");
-                    }
-                    break;
-                case "4":
-                    if ("Successful".equalsIgnoreCase(getApplicationStatus())) {
-                        System.out.print("Enter flat type to book: ");
-                        String flatType = scanner.nextLine();
-                        // Use the input flatType when booking
-                        boolean booked = getAppliedProject().bookFlat(flatType);
-                        if (booked) {
-                            setApplicationStatus("Booked");
-                            System.out.println("Flat booked successfully. Status updated to Booked.");
-                        } else {
-                            System.out.println("No available units for that flat type.");
+                case 2: 
+                    System.out.print("Project name: ");
+                    String pname = scanner.nextLine();
+                    System.out.print("Flat type: ");
+                    String ftype = scanner.nextLine();
+                    for (Project p : system.getProjectControl().getAllProjects()) {
+                        if (p.getProjectName().equalsIgnoreCase(pname)) {
+                            system.getApplicationControl().apply(this, p, ftype);
                         }
-                    } else {
-                        System.out.println("Your application is not successful yet.");
                     }
                     break;
-                case "5":
-                    if ("Booked".equalsIgnoreCase(getApplicationStatus())) {
-                        System.out.println("----- Receipt -----");
-                        System.out.println("NRIC: " + getNric());
-                        System.out.println("Project: " + (getAppliedProject() != null ? getAppliedProject() : "N/A"));
-                        System.out.println("Flat booked: " + "Flat Type as per project details");
-                        System.out.println("-------------------");
-                    } else {
-                        System.out.println("No booking available.");
+                case 3: 
+                    Application app = system.getApplicationControl().getApplicationByApplicant(this);
+                    if (app != null) System.out.println("Status: " + app.getStatus());
+                    else System.out.println("No application.");
+                    break;
+                case 4: 
+                    system.getApplicationControl().withdraw(this);
+                    break;
+                case 5:
+                    System.out.print("Project name: ");
+                    String prj = scanner.nextLine();
+                    System.out.print("Question: ");
+                    String q = scanner.nextLine();
+                    for (Project p : system.getProjectControl().getAllProjects()) {
+                        if (p.getProjectName().equalsIgnoreCase(prj)) {
+                            system.getEnquiryControl().submitEnquiry(this, p, q);
+                        }
                     }
                     break;
-                case "6":
+                case 6: 
+                    system.getEnquiryControl().getEnquiriesByApplicant(this).forEach(e ->
+                    System.out.println("[" + e.getId().substring(0, 6) + "] " + e.getQuestion()));
+                    break;
+                case 7: 
+                    System.out.print("Enquiry ID: ");
+                    String eidEdit = scanner.nextLine();
+                    System.out.print("New question: ");
+                    system.getEnquiryControl().editEnquiry(eidEdit, scanner.nextLine(), this);
+                    break;
+                case 8:
+                    System.out.print("Enquiry ID: ");
+                    system.getEnquiryControl().deleteEnquiry(scanner.nextLine(), this);
+                    break;
+                case 9:
+                    System.out.print("Project to register: ");
+                    String pName = scanner.nextLine();
+                    for (Project p : system.getProjectControl().getAllProjects())
+                        if (p.getProjectName().equalsIgnoreCase(pName))
+                            system.getOfficerControl().registerToProject(this, p);
+                    break;
+                case 10:
+                    getRegistrations().forEach(r ->
+                        System.out.println(r.getProject().getProjectName() + " - " + r.getStatus()));
+                    break;
+                case 11:
+                    getRegistrations().stream()
+                        .filter(r -> r.getStatus() == Registration.Status.APPROVED)
+                        .map(Registration::getProject)
+                        .forEach(p -> System.out.println(p.getProjectName() + " | " + p.getNeighborhood()));
+                    break;
+                case 12:
+                    getRegistrations().stream()
+                        .filter(r -> r.getStatus() == Registration.Status.APPROVED)
+                        .flatMap(r -> system.getEnquiryControl().getEnquiriesByProject(r.getProject()).stream())
+                        .forEach(e -> System.out.println(e.getApplicant().getNric() + ": " + e.getQuestion()));
+                    break;
+                case 13:
+                    getRegistrations().stream()
+                        .filter(r -> r.getStatus() == Registration.Status.APPROVED)
+                        .forEach(r -> system.getEnquiryControl().getEnquiriesByProject(r.getProject()).forEach(e -> {
+                            if (e.getResponse() == null) {
+                                System.out.println("Question: " + e.getQuestion());
+                                System.out.print("Reply: ");
+                                system.getEnquiryControl().replyToEnquiry(e.getId(), scanner.nextLine());
+                            }
+                        }));
+                    break;
+                case 14:
+                    System.out.print("Applicant NRIC: ");
+                    String nric = scanner.nextLine();
+                    System.out.print("Flat type: ");
+                    String flat = scanner.nextLine();
+                    for (User u : system.getUsers()) {
+                        if (u instanceof Applicant && u.getNric().equalsIgnoreCase(nric))
+                            system.getApplicationControl().bookFlat(this, (Applicant) u, flat);
+                    }
+                    break;
+                case 15:
+                    System.out.println("(To implement: generate receipt based on booked application)");
+                    break;
+                case 16:
                     System.out.print("Enter new password: ");
                     String newPw = scanner.nextLine();
                     changePassword(newPw);
                     System.out.println("Password changed.");
                     break;
-                case "7":
-                    logout = true;
+                case 17:
+                    logout = true; 
                     break;
                 default:
                     System.out.println("Invalid option.");
             }
         }
     }
+
 }
