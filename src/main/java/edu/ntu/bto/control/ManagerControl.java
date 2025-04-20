@@ -63,7 +63,6 @@ public class ManagerControl {
         Project proj = app.getProject();
         if (flatType.equalsIgnoreCase(proj.getType1())) { // Approve as long as there are flats available, decrement accordingly
             if (proj.getUnitsType1() > 0) {
-                proj.decrementUnitsType1();
                 app.setStatus(Application.Status.SUCCESSFUL);
                 System.out.println("Application approved.");
                 return;
@@ -71,7 +70,6 @@ public class ManagerControl {
         }
         else if (flatType.equalsIgnoreCase(proj.getType2())) {
             if (proj.getUnitsType2() > 0) {
-                proj.decrementUnitsType2();
                 app.setStatus(Application.Status.SUCCESSFUL);
                 System.out.println("Application approved.");
                 return;
