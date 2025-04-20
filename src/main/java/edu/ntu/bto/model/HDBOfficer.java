@@ -43,67 +43,99 @@ public class HDBOfficer extends Applicant {
             System.out.println("12. View Handled Project Enquiries");
             System.out.println("13. Reply to Project Enquiries");
             System.out.println("14. Book Flat for Applicant");
-            System.out.println("15. Generate Receipt");
-            System.out.println("16. Change Password");
-            System.out.println("17. Logout");
+            System.out.println("15. Change Password");
+            System.out.println("16. Logout");
             System.out.print("Select option: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1: 
-                    system.getProjectControl().getVisibleProjectsForApplicant(this).forEach(p ->
-                    System.out.println(p.getProjectName() + " - " + p.getNeighborhood()));
+                    System.out.println("Projects available to you:");
+                    system.getProjectControl().getVisibleProjectsForApplicant((Applicant) this).forEach(p ->
+                        System.out.println(p.toString()));
                     break;
                 case 2: 
                     System.out.print("Project name: ");
                     String pname = scanner.nextLine();
-                    System.out.print("Flat type: ");
-                    String ftype = scanner.nextLine();
+                    boolean projFound = false;
                     for (Project p : system.getProjectControl().getAllProjects()) {
                         if (p.getProjectName().equalsIgnoreCase(pname)) {
-                            system.getApplicationControl().apply(this, p, ftype);
+                            projFound = true;
+                            System.out.print("Flat type: ");
+                            String ftype = scanner.nextLine();
+                            boolean result = system.getApplicationControl().apply(this, p, ftype);
+                            if (result) {
+                                System.out.println("Application successful.");
+                                break;
+                            } else {
+                                break;
+                            }
                         }
+                    }
+                    if (!projFound) {
+                        System.out.println("No such project found. Application failed.");
                     }
                     break;
                 case 3: 
-                    Application app = system.getApplicationControl().getApplicationByApplicant(this);
+                    Application app = system.getApplicationControl().getApplicationByApplicant((Applicant) this);
                     if (app != null) System.out.println("Status: " + app.getStatus());
                     else System.out.println("No application.");
                     break;
                 case 4: 
-                    system.getApplicationControl().withdraw(this);
+                    system.getApplicationControl().withdraw((Applicant) this);
                     break;
                 case 5:
                     System.out.print("Project name: ");
                     String prj = scanner.nextLine();
-                    System.out.print("Question: ");
-                    String q = scanner.nextLine();
+                    boolean eFound = false;
                     for (Project p : system.getProjectControl().getAllProjects()) {
                         if (p.getProjectName().equalsIgnoreCase(prj)) {
-                            system.getEnquiryControl().submitEnquiry(this, p, q);
+                            eFound = true;
+                            System.out.print("Question: ");
+                            String q = scanner.nextLine();
+                            system.getEnquiryControl().submitEnquiry((Applicant) this, p, q);
+                            break;
                         }
+                    }
+                    if (!eFound) {
+                        System.out.println("No such project found.");
                     }
                     break;
                 case 6: 
-                    system.getEnquiryControl().getEnquiriesByApplicant(this).forEach(e ->
-                    System.out.println("[" + e.getId().substring(0, 6) + "] " + e.getQuestion()));
+                    system.getEnquiryControl().getEnquiriesByApplicant((Applicant) this).forEach(e ->
+                    System.out.println("[" + e.getId() + "] " + e.getQuestion()));
                     break;
                 case 7: 
                     System.out.print("Enquiry ID: ");
                     String eidEdit = scanner.nextLine();
                     System.out.print("New question: ");
-                    system.getEnquiryControl().editEnquiry(eidEdit, scanner.nextLine(), this);
+                    system.getEnquiryControl().editEnquiry(eidEdit, scanner.nextLine(), (Applicant) this);
                     break;
                 case 8:
                     System.out.print("Enquiry ID: ");
-                    system.getEnquiryControl().deleteEnquiry(scanner.nextLine(), this);
+                    system.getEnquiryControl().deleteEnquiry(scanner.nextLine(), (Applicant) this);
                     break;
                 case 9:
                     System.out.print("Project to register: ");
                     String pName = scanner.nextLine();
-                    for (Project p : system.getProjectControl().getAllProjects())
-                        if (p.getProjectName().equalsIgnoreCase(pName))
-                            system.getOfficerControl().registerToProject(this, p);
+                    boolean pFound = false;
+                    for (Project p : system.getProjectControl().getAllProjects()) {
+                        if (p.getProjectName().equalsIgnoreCase(pName)) {
+                            pFound = true;
+                            boolean outcome = system.getOfficerControl().registerToProject(this, p);
+                            if (outcome) {
+                                System.out.println("Registration submitted for approval.");
+                                break;
+                            }
+                            else {
+                                System.out.println("Registration attempt voided.");
+                                break;
+                            }
+                        }
+                    }
+                    if (!pFound) {
+                        System.out.println("No such project found. Unsuccessful.");
+                    }
                     break;
                 case 10:
                     getRegistrations().forEach(r ->
@@ -113,7 +145,7 @@ public class HDBOfficer extends Applicant {
                     getRegistrations().stream()
                         .filter(r -> r.getStatus() == Registration.Status.APPROVED)
                         .map(Registration::getProject)
-                        .forEach(p -> System.out.println(p.getProjectName() + " | " + p.getNeighborhood()));
+                        .forEach(p -> System.out.println(p.toString()));
                     break;
                 case 12:
                     getRegistrations().stream()
@@ -128,7 +160,7 @@ public class HDBOfficer extends Applicant {
                             if (e.getResponse() == null) {
                                 System.out.println("Question: " + e.getQuestion());
                                 System.out.print("Reply: ");
-                                system.getEnquiryControl().replyToEnquiry(e.getId(), scanner.nextLine());
+                                system.getEnquiryControl().replyEnquiry(e.getId(), scanner.nextLine());
                             }
                         }));
                     break;
@@ -137,21 +169,23 @@ public class HDBOfficer extends Applicant {
                     String nric = scanner.nextLine();
                     System.out.print("Flat type: ");
                     String flat = scanner.nextLine();
+                    boolean uFound = false;
                     for (User u : system.getUsers()) {
-                        if (u instanceof Applicant && u.getNric().equalsIgnoreCase(nric))
+                        if ((u instanceof Applicant || u instanceof HDBOfficer) && u.getNric().equalsIgnoreCase(nric))
+                            uFound = true;
                             system.getApplicationControl().bookFlat(this, (Applicant) u, flat);
+                    }
+                    if (!uFound) {
+                        System.out.println("No such user. Booking attempt voided.");
                     }
                     break;
                 case 15:
-                    System.out.println("(To implement: generate receipt based on booked application)");
-                    break;
-                case 16:
                     System.out.print("Enter new password: ");
                     String newPw = scanner.nextLine();
                     changePassword(newPw);
                     System.out.println("Password changed.");
                     break;
-                case 17:
+                case 16:
                     logout = true; 
                     break;
                 default:
