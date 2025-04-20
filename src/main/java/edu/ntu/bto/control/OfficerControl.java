@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import edu.ntu.bto.model.HDBOfficer;
 import edu.ntu.bto.model.Project;
+import edu.ntu.bto.model.Application;
 import edu.ntu.bto.model.Registration;
 
 import java.util.List;
@@ -28,11 +29,14 @@ public class OfficerControl {
                 return false;
             }
         }
+        if (officer.getApplication() != null && officer.getApplication().getProject().equals(project) && officer.getApplication().getStatus() != Application.Status.UNSUCCESSFUL) {
+            System.out.println("Cannot register for project if you are an applicant.");
+            return false;
+        }
 
         Registration registration = new Registration(officer, project);
         officer.getRegistrations().add(registration);
         registrations.add(registration);
-        System.out.println("Registration submitted for approval.");
         return true;
     }
 
@@ -68,4 +72,3 @@ public class OfficerControl {
         System.out.println("Officer registration rejected.");
     }
 }
-
