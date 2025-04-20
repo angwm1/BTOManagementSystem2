@@ -142,10 +142,21 @@ public class HDBOfficer extends Applicant {
                         System.out.println(r.getProject().getProjectName() + " - " + r.getStatus()));
                     break;
                 case 11:
+                    System.out.println("Current Handled Project:");
                     getRegistrations().stream()
                         .filter(r -> r.getStatus() == Registration.Status.APPROVED)
                         .map(Registration::getProject)
-                        .forEach(p -> System.out.println(p.toString()));
+                        .forEach(p -> {
+                            System.out.println(p.toString());
+                            System.out.println("All applications for this project:");
+                            for (Application a : system.getApplicationControl().getApplications()) {
+                                if (a.getProject().equals(p)) {
+                                    System.out.println("Applicant " + a.getApplicant().getNric() 
+                                    + " applying for flat type: " + a.getFlatType() 
+                                    + " - Status: " + a.getStatus());
+                                }
+                            }
+                        });
                     break;
                 case 12:
                     getRegistrations().stream()
@@ -171,9 +182,10 @@ public class HDBOfficer extends Applicant {
                     String flat = scanner.nextLine();
                     boolean uFound = false;
                     for (User u : system.getUsers()) {
-                        if ((u instanceof Applicant || u instanceof HDBOfficer) && u.getNric().equalsIgnoreCase(nric))
+                        if ((u instanceof Applicant || u instanceof HDBOfficer) && u.getNric().equalsIgnoreCase(nric)) {
                             uFound = true;
                             system.getApplicationControl().bookFlat(this, (Applicant) u, flat);
+                        }
                     }
                     if (!uFound) {
                         System.out.println("No such user. Booking attempt voided.");
