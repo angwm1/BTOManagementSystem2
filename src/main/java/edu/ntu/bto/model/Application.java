@@ -37,4 +37,3 @@ public class Application {
         return project; 
     }
 }
-
