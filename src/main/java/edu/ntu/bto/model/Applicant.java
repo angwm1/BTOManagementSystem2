@@ -48,18 +48,30 @@ public class Applicant extends User {
 
 			switch (choice) {
 				case 1:
+					System.out.println("Projects available to you:");
 					system.getProjectControl().getVisibleProjectsForApplicant(this).forEach(p ->
-						System.out.println(p.getProjectName() + " - " + p.getNeighborhood()));
+						System.out.println(p.toString()));
 					break;
 				case 2:
 					System.out.print("Project name: ");
 					String pname = scanner.nextLine();
-					System.out.print("Flat type: ");
-					String ftype = scanner.nextLine();
+					boolean projFound = false;
 					for (Project p : system.getProjectControl().getAllProjects()) {
-						if (p.getProjectName().equalsIgnoreCase(pname)) {
-							system.getApplicationControl().apply(this, p, ftype);
+						if (p.getProjectName().equalsIgnoreCase(pname) && p.isVisible()) {
+							projFound = true;
+							System.out.print("Flat type: ");
+							String ftype = scanner.nextLine();
+							boolean result = system.getApplicationControl().apply(this, p, ftype);
+							if (result) {
+								System.out.println("Application successful.");
+								break;
+							} else {
+								break;
+							}
 						}
+					}
+					if (!projFound) {
+						System.out.println("No such project found. Application failed.");
 					}
 					break;
 				case 3:
@@ -73,17 +85,23 @@ public class Applicant extends User {
 				case 5:
 					System.out.print("Project name: ");
 					String prj = scanner.nextLine();
-					System.out.print("Question: ");
-					String q = scanner.nextLine();
+					boolean eFound = false;
 					for (Project p : system.getProjectControl().getAllProjects()) {
 						if (p.getProjectName().equalsIgnoreCase(prj)) {
+							eFound = true;
+							System.out.print("Question: ");
+							String q = scanner.nextLine();
 							system.getEnquiryControl().submitEnquiry(this, p, q);
+							break;
 						}
+					}
+					if (!eFound) {
+						System.out.println("No such project found.");
 					}
 					break;
 				case 6:
 					system.getEnquiryControl().getEnquiriesByApplicant(this).forEach(e ->
-					System.out.println("[" + e.getId().substring(0, 6) + "] " + e.getQuestion()));
+					System.out.println("[" + e.getId() + "] " + e.getQuestion()));
 					break;
 				case 7:
 					System.out.print("Enquiry ID: ");
