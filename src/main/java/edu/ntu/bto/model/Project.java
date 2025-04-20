@@ -107,6 +107,10 @@ public class Project {
 		return officer;
 	}
 
+	public void setOfficer(String officer) {
+		this.officer = officer;
+	}
+
 	public boolean isVisible() {
 		return visible;
 	}
