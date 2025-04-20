@@ -1,5 +1,7 @@
 package edu.ntu.bto.model;
 
+import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Scanner;
 import edu.ntu.bto.service.BTOManagementSystem;
 
@@ -51,11 +53,11 @@ public class HDBManager extends User {
             switch (choice) {
                 case 1:
                     system.getProjectControl().getAllProjects().forEach(p ->
-                        System.out.println(p.getProjectName() + " - " + p.getNeighborhood()));
+                        System.out.println(p.toString()));
                     break;
                 case 2:
-                    system.getProjectControl().getProjectsByManager(this.name).forEach(p ->
-                        System.out.println(p.getProjectName() + " - " + p.getNeighborhood()));
+                    system.getProjectControl().getProjectsByManager(this.getName()).forEach(p ->
+                        System.out.println(p.toString()));
                     break;
                 case 3:
                     System.out.print("Enter project name: ");
@@ -64,27 +66,64 @@ public class HDBManager extends User {
                     String neighborhood = scanner.nextLine();
                     System.out.print("Enter Type 1 (e.g., 2-Room): ");
                     String type1 = scanner.nextLine();
+                    while (!type1.equalsIgnoreCase("2-Room") && !type1.equalsIgnoreCase("3-Room")) {
+                        System.out.println("Invalid flat type entered. Try again.");
+                        System.out.print("Enter Type 1 (e.g., 2-Room): ");
+                        type1 = scanner.nextLine();
+                    }
                     System.out.print("Enter number of units for Type 1: ");
                     int unitsType1 = Integer.parseInt(scanner.nextLine());
+                    while (unitsType1 < 0) {
+                        System.out.println("Invalid number entered. Try again.");
+                        System.out.print("Enter number of units for Type 1: ");
+                        unitsType1 = Integer.parseInt(scanner.nextLine());
+                    }
                     System.out.print("Enter selling price for Type 1: ");
                     double priceType1 = Double.parseDouble(scanner.nextLine());
+                    while (priceType1 < 0) {
+                        System.out.println("Invalid number entered. Try again.");
+                        System.out.print("Enter selling price for Type 1: ");
+                        priceType1 = Double.parseDouble(scanner.nextLine());
+                    }
                     System.out.print("Enter Type 2 (e.g., 3-Room): ");
                     String type2 = scanner.nextLine();
+                    while (!type2.equalsIgnoreCase("2-Room") && !type2.equalsIgnoreCase("3-Room")) {
+                        System.out.println("Invalid flat type entered. Try again.");
+                        System.out.print("Enter Type 2 (e.g., 3-Room): ");
+                        type2 = scanner.nextLine();
+                    }
                     System.out.print("Enter number of units for Type 2: ");
                     int unitsType2 = Integer.parseInt(scanner.nextLine());
+                    while (unitsType2 < 0) {
+                        System.out.println("Invalid number entered. Try again.");
+                        System.out.print("Enter number of units for Type 2: ");
+                        unitsType2 = Integer.parseInt(scanner.nextLine());
+                    }
                     System.out.print("Enter selling price for Type 2: ");
                     double priceType2 = Double.parseDouble(scanner.nextLine());
+                    while (priceType2 < 0) {
+                        System.out.println("Invalid number entered. Try again.");
+                        System.out.print("Enter selling price for Type 2: ");
+                        priceType2 = Double.parseDouble(scanner.nextLine());
+                    }
                     System.out.print("Enter application opening date (yyyy-MM-dd): ");
                     String openDate = scanner.nextLine();
                     System.out.print("Enter application closing date (yyyy-MM-dd): ");
                     String closeDate = scanner.nextLine();
-                    system.getManagerControl().createProject(name, neighborhood, type1, unitsType1, priceType1, type2, unitsType2, priceType2, openDate, closeDate, this.name);
+                    while (LocalDate.parse(closeDate).isBefore(LocalDate.parse(openDate))) {
+                        System.out.println("Invalid dates entered. Try again.");
+                        System.out.print("Enter application opening date (yyyy-MM-dd): ");
+                        openDate = scanner.nextLine();
+                        System.out.print("Enter application closing date (yyyy-MM-dd): ");
+                        closeDate = scanner.nextLine();
+                    }
+                    system.getManagerControl().createProject(name, neighborhood, type1, unitsType1, priceType1, type2, unitsType2, priceType2, openDate, closeDate, this.getName());
                     break;
                 case 4: // For simplicity, editing neighborhood is shown
                     System.out.print("Enter project name to edit: ");
                     String toEdit = scanner.nextLine();
-                    Project project = system.getProjectControl().getProjectsByManager(this.name).stream()
-                            .filter(p -> p.toString().contains(toEdit))
+                    Project project = system.getProjectControl().getProjectsByManager(this.getName()).stream()
+                            .filter(p -> p.getProjectName().equalsIgnoreCase(toEdit))
                             .findFirst().orElse(null);
                     if (project == null) {
                         System.out.println("Project not found in your list.");
@@ -94,42 +133,66 @@ public class HDBManager extends User {
                     String newNeighborhood = scanner.nextLine();
                     // For simplicity, create a new project instance with updated neighborhood.
                     system.getManagerControl().editProject(project, project.getProjectName(), newNeighborhood, project.getType1(), project.getUnitsType1(), project.getPriceType1(), 
-                    project.getType2(), project.getUnitsType2(), project.getPriceType2(), project.getOpenDate(), project.getCloseDate(), this.name, project.getOfficerSlot(), project.getOfficer());
-                    
+                    project.getType2(), project.getUnitsType2(), project.getPriceType2(), project.getOpenDate(), project.getCloseDate(), this.getName(), project.getOfficerSlot(), project.getOfficer());
                     break;
                 case 5:
                     System.out.print("Project name to delete: ");
                     String toDelete = scanner.nextLine();
-                    system.getProjectControl().getProjectsByManager(this.name).stream()
+                    boolean projDeleted = false;
+                    Optional<Project> projToDelete = system.getProjectControl().getProjectsByManager(this.getName()).stream()
                         .filter(p -> p.getProjectName().equalsIgnoreCase(toDelete))
-                        .findFirst().ifPresent(system.getManagerControl()::deleteProject);
+                        .findFirst();
+                    if (projToDelete != null) {
+                        projToDelete.ifPresent(system.getManagerControl()::deleteProject);
+                        projDeleted = true;
+                        break;
+                    }
+                    if (!projDeleted) {
+                        System.out.print("Project not found.");
+                    }
                     break;
                 case 6:
                     System.out.print("Project name to toggle: ");
                     String toggle = scanner.nextLine();
-                    system.getProjectControl().getProjectsByManager(this.name).stream()
+                    boolean projToggled = false;
+                    Optional<Project> projToToggle = system.getProjectControl().getProjectsByManager(this.getName()).stream()
                         .filter(p -> p.getProjectName().equalsIgnoreCase(toggle))
-                        .findFirst().ifPresent(system.getProjectControl()::toggleProjectVisibility);
+                        .findFirst();
+                    if (projToToggle != null) {
+                        projToToggle.ifPresent(system.getProjectControl()::toggleProjectVisibility);
+                        System.out.println("Project visibility successfully toggled.");
+                        projToggled = true;
+                        break;
+                    }
+                    if (!projToggled) {
+                        System.out.println("Project not found.");
+                    }
                     break;
                 case 7:
                     system.getOfficerControl().getRegistrations().forEach(r ->
-                        System.out.println(r.getOfficer().getNric() + " -> " + r.getProject().getProjectName() + " - " + r.getStatus()));
+                        System.out.println("Officer NRIC " + r.getOfficer().getNric() + " FOR Project " + r.getProject().getProjectName() + " - Status: " + r.getStatus()));
                     break;
                 case 8:
                     system.getOfficerControl().getRegistrations().stream()
-                        .filter(r -> r.getProject().getManager().equals(this.name))
+                        .filter(r -> r.getProject().getManager().equals(this.getName()) && r.getStatus() == Registration.Status.PENDING)
                         .forEach(r -> {
-                            System.out.println("Officer: " + r.getOfficer().getNric() + " wants to handle " + r.getProject().getProjectName());
-                            System.out.print("Approve (y/n)? ");
-                            String ans = scanner.nextLine();
-                            if (ans.equalsIgnoreCase("y")) system.getManagerControl().approveOfficer(r);
-                            else system.getManagerControl().rejectOfficer(r);
+                            if (r.getProject().getOfficerSlot() != 0) {
+                                System.out.println("Officer NRIC " + r.getOfficer().getNric() + " wants to handle Project " + r.getProject().getProjectName());
+                                System.out.print("Approve? (y/n): ");
+                                String ans = scanner.nextLine();
+                                if (ans.equalsIgnoreCase("y")) system.getManagerControl().approveOfficer(r);
+                                else system.getManagerControl().rejectOfficer(r);
+                            }
+                            else {
+                                System.out.print("No more officer slots available. Auto-rejecting registration");
+                                system.getManagerControl().rejectOfficer(r);
+                            }
                         });
                     break;
                 case 9:
                     for (Application a : system.getApplicationControl().getApplications()) {
-                        if (a.getProject().getManager().equals(this.name)) {
-                            System.out.println(a.getApplicant().getNric() + " - " + a.getFlatType());
+                        if (a.getProject().getManager().equals(this.getName()) && a.getStatus() == Application.Status.PENDING) {
+                            System.out.println("Applicant " + a.getApplicant().getNric() + " applying for flat type: " + a.getFlatType());
                             System.out.print("Approve (y/n)? ");
                             if (scanner.nextLine().equalsIgnoreCase("y")) system.getManagerControl().approveApplication(a);
                             else system.getManagerControl().rejectApplication(a);
@@ -138,7 +201,7 @@ public class HDBManager extends User {
                     break;
                 case 10:
                     for (Application a : system.getApplicationControl().getApplications()) {
-                        if (a.getProject().getManager().equals(this.name) && a.getStatus() != Application.Status.BOOKED) {
+                        if (a.getProject().getManager().equals(this.getName()) && a.getStatus() == Application.Status.UNSUCCESSFUL) {
                             System.out.print("Approve withdrawal for " + a.getApplicant().getNric() + " (y/n)? ");
                             if (scanner.nextLine().equalsIgnoreCase("y")) system.getManagerControl().approveWithdrawal(a.getApplicant());
                             else system.getManagerControl().rejectWithdrawal(a.getApplicant());
@@ -150,12 +213,12 @@ public class HDBManager extends User {
                         System.out.println(e.getApplicant().getNric() + ": " + e.getQuestion()));
                     break;
                 case 12:
-                    system.getProjectControl().getProjectsByManager(this.name).forEach(proj ->
+                    system.getProjectControl().getProjectsByManager(this.getName()).forEach(proj ->
                         system.getEnquiryControl().getEnquiriesByProject(proj).forEach(e -> {
                             if (e.getResponse() == null) {
                                 System.out.println("Q: " + e.getQuestion());
                                 System.out.print("Reply: ");
-                                system.getEnquiryControl().replyToEnquiry(e.getId(), scanner.nextLine());
+                                system.getEnquiryControl().replyEnquiry(e.getId(), scanner.nextLine());
                             }
                         }));
                     break;
