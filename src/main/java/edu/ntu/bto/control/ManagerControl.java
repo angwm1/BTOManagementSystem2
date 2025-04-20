@@ -42,13 +42,15 @@ public class ManagerControl {
     public void editProject(Project project, String name, String neighborhood, String type1, int unitsType1, double priceType1, 
                             String type2, int unitsType2, double priceType2, String openDate, String closeDate, 
                             String manager, int officerSlot, String officer) {
-        if (project.getManager() == manager) { // Demonstrate new neighborhood for demo
+        if (project.getManager().equalsIgnoreCase(manager)) { // Demonstrate new neighborhood for demo
             projects.remove(project);
             Project newProj = new Project(name, neighborhood, type1, unitsType1, priceType1, 
                             type2, unitsType2, priceType2, openDate, closeDate, manager, officerSlot, officer);
             projects.add(newProj);
+            System.out.println("Project updated.");
+            return;
         }
-        System.out.println("Project updated.");
+        System.out.println("Failed to update project.");
     }
 
     public void deleteProject(Project project) {
@@ -64,13 +66,15 @@ public class ManagerControl {
                 proj.decrementUnitsType1();
                 app.setStatus(Application.Status.SUCCESSFUL);
                 System.out.println("Application approved.");
+                return;
             }
         }
-        else {
+        else if (flatType.equalsIgnoreCase(proj.getType2())) {
             if (proj.getUnitsType2() > 0) {
                 proj.decrementUnitsType2();
                 app.setStatus(Application.Status.SUCCESSFUL);
                 System.out.println("Application approved.");
+                return;
             }
         }
 
@@ -84,7 +88,6 @@ public class ManagerControl {
     }
 
     public void approveWithdrawal(Applicant applicant) {
-        applicant.setApplication(null);
         System.out.println("Withdrawal approved.");
     }
 
@@ -108,8 +111,8 @@ public class ManagerControl {
         for (Application app : applications) {
             if (app.getStatus() == Application.Status.BOOKED) {
                 Applicant a = app.getApplicant();
-                if (filterBy.equals("Married") && !a.getMaritalStatus().equals("Married")) continue;
-                System.out.printf("NRIC: %s, Age: %d, Marital: %s, Project: %s, Flat: %s\n",
+                if (filterBy.equalsIgnoreCase("Married") && !a.getMaritalStatus().equalsIgnoreCase("Married")) continue;
+                System.out.printf("NRIC: %s, Age: %d, Marital Status: %s, Project: %s, Flat Booked: %s\n",
                                   a.getNric(), a.getAge(), a.getMaritalStatus(),
                                   app.getProject().getProjectName(), app.getFlatType());
             }
@@ -125,4 +128,3 @@ public class ManagerControl {
         return !(end1.isBefore(start2) || start1.isAfter(end2));
     }
 }
-
