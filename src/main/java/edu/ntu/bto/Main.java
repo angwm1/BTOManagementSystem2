@@ -14,7 +14,12 @@ public class Main {
         while (true) {
             System.out.println("\n--- Welcome to the BTO Management System ---");
             System.out.print("Enter NRIC: ");
-            String nric = scanner.nextLine();
+            String nric = scanner.nextLine().trim().toUpperCase();
+            while (!nric.matches("^[STFG]\\d{7}[A-Z]$")) {
+                System.out.println("Invalid NRIC. Please try again.");
+                System.out.print("Enter NRIC: ");
+                nric = scanner.nextLine().trim().toUpperCase();
+            }
             System.out.print("Enter Password: ");
             String password = scanner.nextLine();
             User user = system.login(nric, password);
