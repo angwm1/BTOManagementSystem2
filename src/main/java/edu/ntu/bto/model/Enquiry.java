@@ -26,6 +26,10 @@ public class Enquiry {
         return question; 
     }
 
+    public void setQuestion(String newQ) { 
+        question = newQ; 
+    }
+
     public Applicant getApplicant() { 
         return applicant; 
     }
