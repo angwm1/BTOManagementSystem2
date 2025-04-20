@@ -16,7 +16,7 @@ public class EnquiryControl {
     }
 
     public void submitEnquiry(Applicant applicant, Project project, String question) {
-        String id = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString().substring(0, 10);
         Enquiry e = new Enquiry(id, applicant, project, question);
         enquiries.add(e);
         System.out.println("Enquiry submitted.");
@@ -42,7 +42,7 @@ public class EnquiryControl {
         return result;
     }
 
-    public void replyToEnquiry(String enquiryId, String response) {
+    public void replyEnquiry(String enquiryId, String response) {
         for (Enquiry e : enquiries) {
             if (e.getId().equals(enquiryId)) {
                 e.setResponse(response);
@@ -54,14 +54,20 @@ public class EnquiryControl {
     }
 
     public void deleteEnquiry(String enquiryId, Applicant applicant) {
-        enquiries.removeIf(e -> e.getId().equals(enquiryId) && e.getApplicant().equals(applicant));
-        System.out.println("Enquiry deleted.");
+        for (Enquiry e : enquiries) {
+            if (e.getId().equals(enquiryId) && e.getApplicant().equals(applicant)) {
+                enquiries.remove(e);
+                System.out.println("Enquiry successfully deleted.");
+                return;
+            }
+        }
+        System.out.println("Enquiry not found. Deletion not successful.");
     }
 
     public void editEnquiry(String enquiryId, String newQuestion, Applicant applicant) {
         for (Enquiry e : enquiries) {
             if (e.getId().equals(enquiryId) && e.getApplicant().equals(applicant)) {
-                e.setResponse(null);
+                e.setQuestion(newQuestion);
                 System.out.println("Enquiry updated.");
                 return;
             }
@@ -73,4 +79,3 @@ public class EnquiryControl {
         return enquiries;
     }
 }
-
