@@ -85,14 +85,6 @@ public class BTOManagementSystem {
         return ec;
     }
     
-    public void addProject(Project proj) {
-        projects.add(proj);
-    }
-    
-    public void removeProject(Project proj) {
-        projects.remove(proj);
-    }
-    
     /**
      * Simple login method based on NRIC and password.
      */
