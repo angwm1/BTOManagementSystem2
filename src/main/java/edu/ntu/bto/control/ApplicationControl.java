@@ -67,10 +67,6 @@ public class ApplicationControl {
         System.out.println("Application withdrawn.");
     }
 
-    public void updateStatus(Application app, Application.Status status) {
-        app.setStatus(status);
-    }
-
     public void bookFlat(HDBOfficer officer, Applicant applicant, String flatType) {
         Application app = applicant.getApplication();
         if (app == null) {
