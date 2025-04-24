@@ -1,5 +1,6 @@
 package edu.ntu.bto.model;
 
+import java.util.List;
 import java.util.Scanner;
 
 import edu.ntu.bto.service.BTOManagementSystem;
