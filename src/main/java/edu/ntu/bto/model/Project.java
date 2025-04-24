@@ -140,4 +140,13 @@ public class Project {
 				projectName, neighborhood, type1, unitsType1, priceType1, type2, unitsType2, priceType2, openDate,
 				closeDate, manager, officerSlot, officer, visible);
 	}
+	
+	public String toStringSingle() {
+		return String.format(
+				"Project: %s%n" + "  Neighborhood: %s%n" + "  Flat Types:%n" + "    • %s – %d units @ $%.2f%n"
+						+ "  Application Window: %s to %s%n" + "  Manager: %s%n"
+						+ "  Officer Slot: %d – %s%n" + "  Visible: %b",
+				projectName, neighborhood, type1, unitsType1, priceType1, openDate,
+				closeDate, manager, officerSlot, officer, visible);
+	}
 }
