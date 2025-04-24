@@ -97,12 +97,18 @@ public class Applicant extends User {
 				// View projects visible to this applicant
 				System.out.print("Choose filter option (All/Flat type/Neighbourhood): ");
 				String option = scanner.nextLine();
+				List<Project> projToPrint = system.getProjectControl().getVisibleProjectsForApplicant(this);
 				if (option.equalsIgnoreCase("All")) {
 					System.out.println("All projects available to you:");
-					system.getProjectControl().getVisibleProjectsForApplicant(this)
-							.forEach(p -> System.out.println(p.toString()));
+					projToPrint.forEach(p -> { 
+						if (this.maritalStatus.equalsIgnoreCase("Single"))
+							System.out.println(p.toStringSingle());
+						else 
+							System.out.println(p.toString());
+					});
 					break;
-				} else if (option.equalsIgnoreCase("Flat type")) {
+				}
+				else if (option.equalsIgnoreCase("Flat type")) {
 					System.out.print("Enter flat type: ");
 					String flatType = scanner.nextLine();
 					while (!flatType.equalsIgnoreCase("2-room") && !flatType.equalsIgnoreCase("3-room")) {
@@ -111,15 +117,26 @@ public class Applicant extends User {
 						flatType = scanner.nextLine();
 					}
 					System.out.println("All projects available to you with available flat type - " + flatType + ":");
-					system.getProjectControl().filterByFlatType(flatType)
-							.forEach(p -> System.out.println(p.toString()));
+					system.getProjectControl().filterByFlatType(projToPrint, flatType)
+						.forEach(p -> {
+							if (this.maritalStatus.equalsIgnoreCase("Single"))
+								System.out.println(p.toStringSingle());
+							else 
+								System.out.println(p.toString());
+						});
 					break;
-				} else if (option.equalsIgnoreCase("Neighbourhood")) {
+				}
+				else if (option.equalsIgnoreCase("Neighbourhood")) {
 					System.out.print("Enter neighbourhood: ");
 					String neighbourhood = scanner.nextLine();
 					System.out.println("All projects available to you in " + neighbourhood + ":");
-					system.getProjectControl().filterByNeighborhood(neighbourhood)
-							.forEach(p -> System.out.println(p.toString()));
+					system.getProjectControl().filterByNeighborhood(projToPrint, neighbourhood)
+						.forEach(p -> {
+							if (this.maritalStatus.equalsIgnoreCase("Single"))
+								System.out.println(p.toStringSingle());
+							else 
+								System.out.println(p.toString());
+						});
 					break;
 				}
 				System.out.println("Invalid filter option.");
