@@ -209,8 +209,11 @@ public class HDBManager extends User {
                     }
                     break;
                 case 11:
-                    system.getEnquiryControl().getAllEnquiries().forEach(e ->
-                        System.out.println(e.getApplicant().getNric() + ": " + e.getQuestion()));
+                    system.getEnquiryControl().getAllEnquiries().forEach(e -> {
+                        System.out.println(e.getApplicant().getNric() + ": " + e.getQuestion());
+                        if (e.getResponse() == null) System.out.println("Response: -");
+                        else System.out.println("Response: " + e.getResponse());
+                    });
                     break;
                 case 12:
                     system.getProjectControl().getProjectsByManager(this.getName()).forEach(proj ->
