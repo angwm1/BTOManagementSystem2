@@ -26,17 +26,17 @@ public class ProjectControl {
         return result;
     }
 
-    public List<Project> filterByNeighborhood(String keyword) {
+    public List<Project> filterByNeighborhood(List<Project> projList, String keyword) {
         List<Project> result = new ArrayList<>();
-        for (Project p : projects) {
+        for (Project p : projList) {
             if (p.getNeighborhood().equalsIgnoreCase(keyword)) result.add(p);
         }
         return result;
     }
 
-    public List<Project> filterByFlatType(String flatType) {
+    public List<Project> filterByFlatType(List<Project> projList, String flatType) {
         List<Project> result = new ArrayList<>();
-        for (Project p : projects) {
+        for (Project p : projList) {
             if (flatType.equalsIgnoreCase(p.getType1())) {
                 if (p.getUnitsType1() != 0) {
                     result.add(p);
