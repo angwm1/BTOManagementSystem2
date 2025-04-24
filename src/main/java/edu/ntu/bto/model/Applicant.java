@@ -14,6 +14,7 @@ import edu.ntu.bto.service.BTOManagementSystem;
  * @author SC2002 Assignment Group
  */
 public class Applicant extends User {
+	/** The application submitted by this applicant, or {@code null} if none. */
 	private Application application;
 
 	/**

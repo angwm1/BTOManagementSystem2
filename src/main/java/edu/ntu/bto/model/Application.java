@@ -12,12 +12,30 @@ public class Application {
 	 * Enumeration of possible statuses for an application.
 	 */
 	public enum Status {
-		PENDING, SUCCESSFUL, UNSUCCESSFUL, BOOKED
+		/** Entry status upon application – outcome not yet decided. */
+		PENDING,
+		/**
+		 * Outcome of the application is successful – applicant is invited to book a
+		 * flat.
+		 */
+		SUCCESSFUL,
+		/**
+		 * Outcome of the application is unsuccessful – applicant did not get a flat.
+		 */
+		UNSUCCESSFUL,
+		/** Applicant has booked a flat after a successful application. */
+		BOOKED
 	}
 
+	/** The applicant who submitted this application. */
 	private Applicant applicant;
+	/** The project that the applicant applied to. */
 	private Project project;
+	/** The current status of this application. */
 	private Status status;
+	/**
+	 * The flat type (e.g., "2-Room" or "3-Room") that the applicant applied for.
+	 */
 	private String flatType;
 
 	/**

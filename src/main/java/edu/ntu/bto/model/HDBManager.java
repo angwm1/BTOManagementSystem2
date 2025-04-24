@@ -16,6 +16,7 @@ import edu.ntu.bto.service.BTOManagementSystem;
  * @author SC2002 Assignment Group
  */
 public class HDBManager extends User {
+	/** The name of this manager. */
 	protected String name;
 
 	/**

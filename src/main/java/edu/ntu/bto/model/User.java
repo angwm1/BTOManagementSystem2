@@ -11,9 +11,13 @@ import edu.ntu.bto.service.BTOManagementSystem;
  * @author SC2002 Assignment Group
  */
 public abstract class User {
+	/** NRIC (unique identifier) of this user. */
 	protected String nric;
+	/** Age of this user. */
 	protected int age;
+	/** Marital status of this user (e.g., "Single" or "Married"). */
 	protected String maritalStatus;
+	/** Password for this user's account (default is "password"). */
 	protected String password;
 
 	/**
@@ -46,14 +50,30 @@ public abstract class User {
 		this.password = password;
 	}
 
+	/**
+	 * Gets the National Registration Identity Card (NRIC) number.
+	 *
+	 * @return the NRIC number of the person as a {@code String}.
+	 */
 	public String getNric() {
 		return nric;
 	}
 
+	/**
+	 * Gets the age of the person in years.
+	 *
+	 * @return the age of the person as an {@code int}.
+	 */
 	public int getAge() {
 		return age;
 	}
 
+	/**
+	 * Gets the marital status of the person.
+	 *
+	 * @return the marital status of the person as a {@code String}, for example
+	 *         "Single", "Married", or "Divorced".
+	 */
 	public String getMaritalStatus() {
 		return maritalStatus;
 	}

@@ -18,6 +18,7 @@ import java.util.List;
  * @author SC2002 Assignment Group
  */
 public class OfficerControl {
+	/** The list of all officer registration requests in the system. */
 	private List<Registration> registrations;
 
 	/**
@@ -65,6 +66,21 @@ public class OfficerControl {
 		return true;
 	}
 
+	/**
+	 * Determines whether the application windows of two projects overlap.
+	 * <p>
+	 * Parses the open and close date strings of {@code p1} and {@code p2} (in
+	 * ISO-8601 format, "YYYY-MM-DD") into {@link LocalDate} instances and checks if
+	 * the intervals [open1, close1] and [open2, close2] intersect.
+	 * </p>
+	 *
+	 * @param p1 the first {@code Project} whose open and close dates will be parsed
+	 * @param p2 the second {@code Project} whose open and close dates will be
+	 *           parsed
+	 * @return {@code true} if the two projects’ application windows overlap;
+	 *         {@code false} otherwise
+	 * @throws DateTimeParseException if any of the date strings cannot be parsed
+	 */
 	private boolean overlaps(Project p1, Project p2) {
 		LocalDate open1 = LocalDate.parse(p1.getOpenDate());
 		LocalDate close1 = LocalDate.parse(p1.getCloseDate());

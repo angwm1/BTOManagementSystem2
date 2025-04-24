@@ -20,15 +20,28 @@ import edu.ntu.bto.util.DataLoader;
  * @author SC2002 Assignment Group
  */
 public class BTOManagementSystem {
+	/**
+	 * Master list of all users (Applicants, HDB Officers, HDB Managers) in the
+	 * system.
+	 */
 	private List<User> users;
+	/** Master list of all projects in the system. */
 	private List<Project> projects;
+	/** Master list of all applications made in the system. */
 	private List<Application> applications;
+	/** Master list of all officer registration requests in the system. */
 	private List<Registration> registrations;
+	/** Master list of all enquiries submitted in the system. */
 	private List<Enquiry> enquiries;
+	/** Control component for project-related operations. */
 	private final ProjectControl pc;
+	/** Control component for application-related operations. */
 	private final ApplicationControl ac;
+	/** Control component for officer registration operations. */
 	private final OfficerControl oc;
+	/** Control component for manager-specific operations. */
 	private final ManagerControl mc;
+	/** Control component for enquiry-related operations. */
 	private final EnquiryControl ec;
 
 	/**

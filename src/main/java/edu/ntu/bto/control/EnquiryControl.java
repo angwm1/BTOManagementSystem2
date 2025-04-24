@@ -16,6 +16,7 @@ import java.util.List;
  * @author SC2002 Assignment Group
  */
 public class EnquiryControl {
+	/** The list of all enquiries in the system. */
 	private List<Enquiry> enquiries;
 
 	/**

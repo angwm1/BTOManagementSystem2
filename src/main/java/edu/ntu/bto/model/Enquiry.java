@@ -8,10 +8,17 @@ package edu.ntu.bto.model;
  * @author SC2002 Assignment Group
  */
 public class Enquiry {
+	/** A unique identifier for this enquiry. */
 	private String id;
+	/** The applicant who submitted this enquiry. */
 	private Applicant applicant;
+	/** The project that this enquiry is about. */
 	private Project project;
+	/** The question content of the enquiry. */
 	private String question;
+	/**
+	 * The response content provided by an HDB Officer (null if not answered yet).
+	 */
 	private String response;
 
 	/**
@@ -52,7 +59,7 @@ public class Enquiry {
 	 * Sets a new question text for this enquiry. This is used when an applicant
 	 * edits their enquiry.
 	 * 
-	 * @param newQuestion The new question content.
+	 * @param newQ The new question content.
 	 */
 	public void setQuestion(String newQ) {
 		question = newQ;

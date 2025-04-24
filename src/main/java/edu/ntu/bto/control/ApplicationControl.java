@@ -16,6 +16,7 @@ import java.util.List;
  * @author SC2002 Assignment Group
  */
 public class ApplicationControl {
+	/** The list of all applications in the system. */
 	private List<Application> applications;
 
 	/**

@@ -14,6 +14,7 @@ import java.util.List;
  * @author SC2002 Assignment Group
  */
 public class ProjectControl {
+	/** The list of all projects in the system. */
 	private List<Project> projects;
 
 	/**
@@ -52,7 +53,8 @@ public class ProjectControl {
 	/**
 	 * Filters projects by a keyword in their neighborhood.
 	 * 
-	 * @param keyword The neighborhood keyword to search for.
+	 * @param projList The project list
+	 * @param keyword  The neighborhood keyword to search for.
 	 * @return A list of {@link Project}s whose neighborhood contains the given
 	 *         keyword (case-insensitive).
 	 */
@@ -68,6 +70,7 @@ public class ProjectControl {
 	/**
 	 * Filters projects by a given flat type.
 	 * 
+	 * @param projList The project list
 	 * @param flatType The flat type to filter by (e.g., "2-Room" or "3-Room").
 	 * @return A list of {@link Project}s that offer the specified flat type.
 	 */

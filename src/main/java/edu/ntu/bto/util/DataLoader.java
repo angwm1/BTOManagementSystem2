@@ -86,6 +86,24 @@ public class DataLoader {
 		}
 	}
 
+	/**
+	 * Extracts and returns the cell’s value as a {@code String}, handling different
+	 * cell types.
+	 * <p>
+	 * If the cell is of type {@link CellType#STRING}, its trimmed string value is
+	 * returned. If it is of type {@link CellType#NUMERIC} and formatted as a date,
+	 * the date is formatted as {@code yyyy-MM-dd}. If it is numeric but not a date,
+	 * the numeric value is converted to its string representation. For any other
+	 * cell type (including blank, boolean, formula, or error), an empty string is
+	 * returned.
+	 * </p>
+	 *
+	 * @param cell the {@code Cell} from which to extract the value; must not be
+	 *             {@code null}
+	 * @return the cell’s contents as a {@code String}, or an empty string if the
+	 *         cell type is unsupported or blank
+	 * @throws NullPointerException if {@code cell} is {@code null}
+	 */
 	private static String getStringValue(Cell cell) {
 		if (cell.getCellType() == CellType.STRING) {
 			return cell.getStringCellValue().trim();

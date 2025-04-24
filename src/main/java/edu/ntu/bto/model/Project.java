@@ -10,19 +10,45 @@ package edu.ntu.bto.model;
  * @author SC2002 Assignment Group
  */
 public class Project {
+	/** The name of the BTO project. */
 	private String projectName;
+	/** The neighborhood or location of the project. */
 	private String neighborhood;
+	/** The name of the first flat type available (e.g., "2-Room"). */
 	private String type1;
+	/** The number of units available for the first flat type. */
 	private int unitsType1;
+	/** The selling price for each unit of the first flat type. */
 	private double priceType1;
+	/** The name of the second flat type available (e.g., "3-Room"). */
 	private String type2;
+	/** The number of units available for the second flat type. */
 	private int unitsType2;
+	/** The selling price for each unit of the second flat type. */
 	private double priceType2;
+	/** The application opening date for this project (inclusive). */
 	private String openDate;
+	/** The application closing date for this project (inclusive). */
 	private String closeDate;
+	/**
+	 * The identifier of the HDB Manager in charge of this project (e.g., manager's
+	 * name or NRIC).
+	 */
 	private String manager;
+	/**
+	 * The number of HDB officer slots available for this project (how many officers
+	 * can handle it).
+	 */
 	private int officerSlot;
+	/**
+	 * The identifier of the HDB Officer assigned to this project, or "None" if no
+	 * officer assigned yet.
+	 */
 	private String officer;
+	/**
+	 * Visibility flag indicating if this project is visible to applicants (true =
+	 * visible, false = hidden).
+	 */
 	private boolean visible;
 
 	/**
@@ -39,9 +65,6 @@ public class Project {
 	 * @param openDate     Application opening date (YYYY-MM-DD).
 	 * @param closeDate    Application closing date (YYYY-MM-DD).
 	 * @param manager      The manager identifier (name or NRIC) for this project.
-	 * @param officerSlot  Number of officer positions available for this project.
-	 * @param officer      The officer identifier (name or NRIC) assigned to this
-	 *                     project (or "None" if none yet).
 	 */
 	public Project(String projectName, String neighborhood, String type1, int unitsType1, double priceType1,
 			String type2, int unitsType2, double priceType2, String openDate, String closeDate, String manager) {
@@ -70,10 +93,20 @@ public class Project {
 	 * @param neighborhood The neighborhood of the project.
 	 * @param type1        The flat type name.
 	 * @param unitsType1   Number of units for this flat type.
-	 * @param priceType1   Selling price for this flat type.
+	 * @param priceType1   Selling price for this flat type. * @param priceType1
+	 *                     Selling price for the first flat type.
+	 * @param type2        The second flat type name.
+	 * @param unitsType2   Number of units for the second flat type.
+	 * @param priceType2   Selling price for the second flat type.
 	 * @param openDate     Application opening date (YYYY-MM-DD).
 	 * @param closeDate    Application closing date (YYYY-MM-DD).
-	 * @param manager      The manager identifier for this project.
+	 * @param manager      The manager identifier for this project. * @param
+	 *                     officerSlot Number of officer positions available for
+	 *                     this project.
+	 * @param officer      The officer identifier (name or NRIC) assigned to this
+	 *                     project (or "None" if none yet). * @param officerSlot
+	 *                     Number of officer positions available for this project.
+	 * @param officerSlot  Slot for an officer
 	 */
 	public Project(String projectName, String neighborhood, String type1, int unitsType1, double priceType1,
 			String type2, int unitsType2, double priceType2, String openDate, String closeDate, String manager,
@@ -234,8 +267,6 @@ public class Project {
 	/**
 	 * Sets the visibility of the project to applicants.
 	 * 
-	 * @param visible {@code true} to make the project visible, {@code false} to
-	 *                hide it.
 	 */
 	public void toggleVisibility() {
 		visible = !visible;
@@ -249,10 +280,26 @@ public class Project {
 		officerSlot--;
 	}
 
+	/**
+	 * Decrements the count of units of type 1 by one.
+	 * <p>
+	 * This method reduces the {@code unitsType1} field by 1. It does not perform
+	 * any checks for negative values; if {@code unitsType1} is already zero or
+	 * negative, the resulting value may be less than zero.
+	 * </p>
+	 */
 	public void decrementUnitsType1() {
 		unitsType1--;
 	}
 
+	/**
+	 * Decrements the count of units of type 2 by one.
+	 * <p>
+	 * This method reduces the {@code unitsType2} field by 1. It does not perform
+	 * any checks for negative values; if {@code unitsType2} is already zero or
+	 * negative, the resulting value may be less than zero.
+	 * </p>
+	 */
 	public void decrementUnitsType2() {
 		unitsType2--;
 	}
@@ -273,13 +320,32 @@ public class Project {
 				projectName, neighborhood, type1, unitsType1, priceType1, type2, unitsType2, priceType2, openDate,
 				closeDate, manager, officerSlot, officer, visible);
 	}
-	
+
+	/**
+	 * Returns a detailed, formatted string representation of the project for a
+	 * single flat type. The returned string includes: Project name Neighborhood
+	 * Flat type and number of units with price Application window (open and close
+	 * dates) Manager name Officer slot number and officer name Visibility flag
+	 *
+	 * @return a {@code String} containing the project details formatted as:
+	 * 
+	 *         <pre>
+	 * Project: &lt;projectName&gt;
+	 *   Neighborhood: &lt;neighborhood&gt;
+	 *   Flat Types:
+	 *     • &lt;type1&gt; – &lt;unitsType1&gt; units @ $&lt;priceType1&gt;
+	 *   Application Window: &lt;openDate&gt; to &lt;closeDate&gt;
+	 *   Manager: &lt;manager&gt;
+	 *   Officer Slot: &lt;officerSlot&gt; – &lt;officer&gt;
+	 *   Visible: &lt;visible&gt;
+	 *         </pre>
+	 */
 	public String toStringSingle() {
 		return String.format(
 				"Project: %s%n" + "  Neighborhood: %s%n" + "  Flat Types:%n" + "    • %s – %d units @ $%.2f%n"
-						+ "  Application Window: %s to %s%n" + "  Manager: %s%n"
-						+ "  Officer Slot: %d – %s%n" + "  Visible: %b",
-				projectName, neighborhood, type1, unitsType1, priceType1, openDate,
-				closeDate, manager, officerSlot, officer, visible);
+						+ "  Application Window: %s to %s%n" + "  Manager: %s%n" + "  Officer Slot: %d – %s%n"
+						+ "  Visible: %b",
+				projectName, neighborhood, type1, unitsType1, priceType1, openDate, closeDate, manager, officerSlot,
+				officer, visible);
 	}
 }

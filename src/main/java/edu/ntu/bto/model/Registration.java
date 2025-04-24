@@ -13,11 +13,19 @@ public class Registration {
 	 * Enumeration of possible statuses for an officer's registration request.
 	 */
 	public enum Status {
-		PENDING, APPROVED, REJECTED
+		/** Registration has been submitted and is pending manager approval. */
+		PENDING,
+		/** Registration request has been approved by the manager. */
+		APPROVED,
+		/** Registration request has been rejected by the manager. */
+		REJECTED
 	}
 
+	/** The HDB Officer who submitted this registration request. */
 	private HDBOfficer officer;
+	/** The project that the officer wants to handle. */
 	private Project project;
+	/** The current status of this registration request. */
 	private Status status;
 
 	/**

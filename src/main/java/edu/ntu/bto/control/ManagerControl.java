@@ -18,8 +18,11 @@ import java.util.List;
  * @author SC2002 Assignment Group
  */
 public class ManagerControl {
+	/** The list of all projects in the system. */
 	private List<Project> projects;
+	/** The list of all applications in the system. */
 	private List<Application> applications;
+	/** The list of all officer registration requests in the system. */
 	private List<Registration> registrations;
 
 	/**
@@ -50,8 +53,6 @@ public class ManagerControl {
 	 * @param openDate     Application opening date.
 	 * @param closeDate    Application closing date.
 	 * @param manager      The manager identifier (name or NRIC) for this project.
-	 * @param officerSlot  Number of officer slots available.
-	 * @param officer      The officer identifier assigned (or "None" if none).
 	 */
 	public void createProject(String name, String neighborhood, String type1, int unitsType1, double priceType1,
 			String type2, int unitsType2, double priceType2, String openDate, String closeDate, String manager) {
@@ -221,6 +222,21 @@ public class ManagerControl {
 		}
 	}
 
+	/**
+	 * Determines whether two date ranges overlap.
+	 * <p>
+	 * Each date string must be in ISO-8601 format (YYYY-MM-DD). The method parses
+	 * the strings into {@link LocalDate} instances and checks if the ranges
+	 * [start1, end1] and [start2, end2] have any intersection.
+	 * </p>
+	 *
+	 * @param s1 the start date of the first range, in ISO-8601 format (YYYY-MM-DD)
+	 * @param e1 the end date of the first range, in ISO-8601 format (YYYY-MM-DD)
+	 * @param s2 the start date of the second range, in ISO-8601 format (YYYY-MM-DD)
+	 * @param e2 the end date of the second range, in ISO-8601 format (YYYY-MM-DD)
+	 * @return {@code true} if the two date ranges overlap; {@code false} otherwise
+	 * @throws DateTimeParseException if any of the date strings cannot be parsed
+	 */
 	private boolean overlaps(String s1, String e1, String s2, String e2) {
 		LocalDate start1 = LocalDate.parse(s1);
 		LocalDate end1 = LocalDate.parse(e1);

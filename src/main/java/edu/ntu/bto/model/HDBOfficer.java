@@ -15,6 +15,7 @@ import edu.ntu.bto.service.BTOManagementSystem;
  * @author SC2002 Assignment Group
  */
 public class HDBOfficer extends Applicant {
+	/** The list of registrations this officer has submitted to handle projects. */
 	private List<Registration> Registrations = new ArrayList<>();
 
 	/**
