@@ -48,9 +48,36 @@ public class Applicant extends User {
 
 			switch (choice) {
 				case 1:
-					System.out.println("Projects available to you:");
-					system.getProjectControl().getVisibleProjectsForApplicant(this).forEach(p ->
-						System.out.println(p.toString()));
+					System.out.print("Choose filter option (All/Flat type/Neighbourhood): ");
+					String option = scanner.nextLine();
+					if (option.equalsIgnoreCase("All")) {
+						System.out.println("All projects available to you:");
+						system.getProjectControl().getVisibleProjectsForApplicant(this).forEach(p ->
+							System.out.println(p.toString()));
+						break;
+					}
+					else if (option.equalsIgnoreCase("Flat type")) {
+						System.out.print("Enter flat type: ");
+						String flatType = scanner.nextLine();
+						while (!flatType.equalsIgnoreCase("2-room") && !flatType.equalsIgnoreCase("3-room")) {
+							System.out.println("Invalid flat type. Please reenter.");
+							System.out.print("Enter flat type: ");
+							flatType = scanner.nextLine();
+						}
+						System.out.println("All projects available to you with available flat type - " + flatType + ":");
+						system.getProjectControl().filterByFlatType(flatType).forEach(p ->
+							System.out.println(p.toString()));
+						break;
+					}
+					else if (option.equalsIgnoreCase("Neighbourhood")) {
+						System.out.print("Enter neighbourhood: ");
+						String neighbourhood = scanner.nextLine();
+						System.out.println("All projects available to you in " + neighbourhood + ":");
+						system.getProjectControl().filterByNeighborhood(neighbourhood).forEach(p ->
+							System.out.println(p.toString()));
+						break;
+					}
+					System.out.println("Invalid filter option.");
 					break;
 				case 2:
 					System.out.print("Project name: ");
@@ -100,15 +127,31 @@ public class Applicant extends User {
 					}
 					break;
 				case 6:
-					system.getEnquiryControl().getEnquiriesByApplicant(this).forEach(e ->
-					System.out.println("[" + e.getId() + "] " + e.getQuestion()));
+					system.getEnquiryControl().getEnquiriesByApplicant(this).forEach(e -> {
+						System.out.println("[" + e.getId() + "] " + e.getQuestion());
+						if (e.getResponse() == null) System.out.println("Response: -");
+						else System.out.println("Response: " + e.getResponse());
+					});
 					break;
 				case 7:
 					System.out.print("Enquiry ID: ");
 					String eidEdit = scanner.nextLine();
-					System.out.print("New question: ");
-					system.getEnquiryControl().editEnquiry(eidEdit, scanner.nextLine(), this);
-					break;
+					boolean answered = false;
+					for (Enquiry e : system.getEnquiryControl().getAllEnquiries()) {
+						if (e.getId().equalsIgnoreCase(eidEdit) && e.getResponse() != null) {
+							answered = true;
+							System.out.print("Enquiry already answered. Please submit a new enquiry instead.");
+							break;
+						}
+					}
+					if (answered) {
+						break;
+					}
+					else {
+						System.out.print("New question: ");
+						system.getEnquiryControl().editEnquiry(eidEdit, scanner.nextLine(), this);
+						break;
+					}
 				case 8:
 					System.out.print("Enquiry ID: ");
 					system.getEnquiryControl().deleteEnquiry(scanner.nextLine(), this);
