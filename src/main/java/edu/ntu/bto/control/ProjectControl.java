@@ -53,6 +53,7 @@ public class ProjectControl {
 
     public void toggleProjectVisibility(Project project) {
         project.toggleVisibility();
+        System.out.println("Project visibility successfully toggled to " + project.isVisible());
     }
 
     public List<Project> getAllProjects() {

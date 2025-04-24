@@ -201,20 +201,20 @@ public class HDBManager extends User {
 			case 6:
 				// Toggle visibility of a project managed by this manager
 				System.out.print("Project name to toggle: ");
-				String toggle = scanner.nextLine();
-				boolean projToggled = false;
-				Optional<Project> projToToggle = system.getProjectControl().getProjectsByManager(this.getName())
-						.stream().filter(p -> p.getProjectName().equalsIgnoreCase(toggle)).findFirst();
-				if (projToToggle != null) {
-					projToToggle.ifPresent(system.getProjectControl()::toggleProjectVisibility);
-					System.out.println("Project visibility successfully toggled.");
-					projToggled = true;
-					break;
-				}
-				if (!projToggled) {
-					System.out.println("Project not found.");
-				}
-				break;
+		                String toggle = scanner.nextLine();
+		                boolean projToggled = false;
+		                Optional<Project> projToToggle = system.getProjectControl().getProjectsByManager(this.getName()).stream()
+		                	.filter(p -> p.getProjectName().equalsIgnoreCase(toggle))
+		                        .findFirst();
+		                if (projToToggle != null) {
+		                        projToToggle.ifPresent(system.getProjectControl()::toggleProjectVisibility);
+		                        projToggled = true;
+		                        break;
+		                }
+		                if (!projToggled) {
+		                        System.out.println("Project not found.");
+		                }
+		                break;
 			case 7:
 				// View all officer registrations
 				system.getOfficerControl().getRegistrations()
