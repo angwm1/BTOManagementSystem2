@@ -27,11 +27,26 @@ import edu.ntu.bto.model.Project;
  */
 public class DataLoader {
 
+	/**
+	 * Loads an Excel workbook from a file in the data directory.
+	 * 
+	 * @param relativePath The filename of the Excel file located in the "data"
+	 *                     directory.
+	 * @return The loaded {@link Workbook}.
+	 * @throws IOException if the file cannot be found or read.
+	 */
 	private static Workbook loadWorkbook(String relativePath) throws IOException {
 		String filePath = Paths.get("data", relativePath).toString();
 		return new XSSFWorkbook(new FileInputStream(filePath));
 	}
 
+	/**
+	 * Safely retrieves an integer value from a cell. This handles numeric cells or
+	 * numeric strings; other types will cause an IllegalStateException.
+	 * 
+	 * @param cell The Excel {@link Cell} containing an integer.
+	 * @return The integer value of the cell.
+	 */
 	private static int getIntCellValue(Cell cell) {
 		if (cell.getCellType() == CellType.NUMERIC) {
 			return (int) cell.getNumericCellValue();
@@ -48,6 +63,13 @@ public class DataLoader {
 		}
 	}
 
+	/**
+	 * Safely retrieves a double value from a cell. This handles numeric cells or
+	 * numeric strings; other types will cause an IllegalStateException.
+	 * 
+	 * @param cell The Excel {@link Cell} containing a double.
+	 * @return The double value of the cell.
+	 */
 	private static double getDoubleCellValue(Cell cell) {
 		if (cell.getCellType() == CellType.NUMERIC) {
 			return cell.getNumericCellValue();
@@ -80,6 +102,14 @@ public class DataLoader {
 		}
 	}
 
+	/**
+	 * Loads all applicants from an Excel file. Each row in the Excel should contain
+	 * applicant details. Name and password columns are ignored (default password is
+	 * used).
+	 * 
+	 * @param fileName The filename of the Excel file containing applicant data.
+	 * @return A list of {@link Applicant} objects loaded from the file.
+	 */
 	public static List<Applicant> loadApplicants(String fileName) {
 		List<Applicant> applicants = new ArrayList<>();
 		try (Workbook workbook = loadWorkbook(fileName)) {
@@ -106,6 +136,13 @@ public class DataLoader {
 		return applicants;
 	}
 
+	/**
+	 * Loads all HDB Managers from an Excel file. Each row should contain manager
+	 * details including name. Password column is ignored (default used).
+	 * 
+	 * @param fileName The filename of the Excel file containing manager data.
+	 * @return A list of {@link HDBManager} objects loaded from the file.
+	 */
 	public static List<HDBManager> loadManagers(String fileName) {
 		List<HDBManager> managers = new ArrayList<>();
 		try (Workbook workbook = loadWorkbook(fileName)) {
@@ -134,6 +171,13 @@ public class DataLoader {
 		return managers;
 	}
 
+	/**
+	 * Loads all HDB Officers from an Excel file. Each row should contain officer
+	 * details. Name and password are ignored (treated like applicants).
+	 * 
+	 * @param fileName The filename of the Excel file containing officer data.
+	 * @return A list of {@link HDBOfficer} objects loaded from the file.
+	 */
 	public static List<HDBOfficer> loadOfficers(String fileName) {
 		List<HDBOfficer> officers = new ArrayList<>();
 		try (Workbook workbook = loadWorkbook(fileName)) {
@@ -160,6 +204,13 @@ public class DataLoader {
 		return officers;
 	}
 
+	/**
+	 * Loads all projects from an Excel file. Each row should contain project
+	 * details as per the specified column format.
+	 * 
+	 * @param fileName The filename of the Excel file containing project data.
+	 * @return A list of {@link Project} objects loaded from the file.
+	 */
 	public static List<Project> loadProjects(String fileName) {
 		List<Project> projects = new ArrayList<>();
 		try (Workbook workbook = loadWorkbook(fileName)) {
